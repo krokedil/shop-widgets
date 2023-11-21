@@ -1,0 +1,45 @@
+{
+    "name": "krokedil/shop-widgets",
+    "description": "A package that contains logic to place widgets on different pages in a WooCommerce shop.",
+    "type": "library",
+    "require": {
+        "php": "~7.4 || ~8.0"
+    },
+    "require-dev": {
+        "php-stubs/woocommerce-stubs": "^8.2",
+        "10up/wp_mock": "^1.0",
+        "wp-coding-standards/wpcs": "^3.0",
+        "clean/phpdoc-md": "^0.19.3"
+    },
+    "license": "GPL-v3",
+    "autoload": {
+        "psr-4": {
+            "Krokedil\\ShopWidgets\\": "src/"
+        }
+    },
+    "scripts": {
+        "phpcs": [
+            "phpcs --standard=phpcs.xml --extensions=php --ignore=vendor/,tests/"
+        ],
+        "phpcbf": [
+            "phpcbf --standard=phpcs.xml --extensions=php --ignore=vendor/,tests/"
+        ],
+        "test": [
+            "phpunit --configuration phpunit.xml"
+        ],
+        "test-coverage-html": [
+            "phpunit --configuration phpunit.xml --coverage-html coverage"
+        ],
+        "test-coverage-clover": [
+            "phpunit --configuration phpunit.xml --coverage-clover coverage.xml"
+        ],
+        "phpdoc": [
+            "./vendor/bin/phpdoc-md"
+        ]
+    },
+    "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        }
+    }
+}
