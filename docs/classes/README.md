@@ -1,8 +1,8 @@
-# Krokedil\SDK
+# Krokedil\ShopWidgets
 
-* [Krokedil\ShopWidgets\CartWidget](Krokedil\ShopWidgets\CartWidget.md) 
-* [Krokedil\ShopWidgets\ProductWidget](Krokedil\ShopWidgets\ProductWidget.md) 
-* [Krokedil\ShopWidgets\Abstracts\AbstractWidget](Krokedil\ShopWidgets\Abstracts\AbstractWidget.md) 
-* [Krokedil\ShopWidgets\Traits\FixedHook](Krokedil\ShopWidgets\Traits\FixedHook.md) 
-* [Krokedil\ShopWidgets\Traits\HasStyles](Krokedil\ShopWidgets\Traits\HasStyles.md) 
-* [Krokedil\ShopWidgets\Traits\HasScripts](Krokedil\ShopWidgets\Traits\HasScripts.md) 
+* [CartWidget](CartWidget.md) 
+* [ProductWidget](ProductWidget.md) 
+* [Abstracts\AbstractWidget](Abstracts\AbstractWidget.md) 
+* [Traits\FixedHook](Traits\FixedHook.md) 
+* [Traits\HasStyles](Traits\HasStyles.md) 
+* [Traits\HasScripts](Traits\HasScripts.md) 

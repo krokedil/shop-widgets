@@ -1,6 +1,6 @@
 <?php
 return (object) [
-	'rootNamespace' => 'Krokedil\SDK',
+	'rootNamespace' => 'Krokedil\ShopWidgets',
 	'destDirectory' => 'docs\classes',
 	'format'        => 'github',
 	'classes'       => [
