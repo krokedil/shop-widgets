@@ -41,6 +41,27 @@ $cart_widget
     ->init();
 ```
 
+If your widget requires either CSS or JS, you can add them to the widget class by using the add_style_handles() and add_script_handles() methods.
+You just need to add the handles for the scripts and styles, however the registration you will need to do before hand in your own plugin.
+
+```php
+use Krokedil\ShopWidgets\CartWidget;
+
+wp_register_style( 'my-widget-styles', 'path/to/styles.css' );
+wp_register_script( 'my-widget-scripts', 'path/to/scripts.js' );
+
+$cart_widget = new CartWidget( 'my_plugin', $settings );
+
+// Add the styles and scripts
+$cart_widget
+    ->add_style_handles( array( 'my-widget-styles' ) )
+    ->add_script_handles( array( 'my-widget-scripts' ) )
+    ...
+    ->init();
+```
+
+This will automatically enqueue these styles and scripts before the widget is printed. It will also make a check to ensure they are only enqueued on pages they are valid for.
+
 The package also comes with some predefined settings that can be used to allow users to set the locations themselves.
 You can access these settings by calling the get_setting_fields() method on the widget class, and pass the title you want the settings to have on your page.
 
