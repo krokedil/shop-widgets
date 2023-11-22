@@ -17,6 +17,16 @@
             "Krokedil\\ShopWidgets\\": "src/"
         }
     },
+    "archive": {
+        "exclude": [
+            "tests/*",
+            "phpunit.xml",
+            ".phpdoc-md",
+            "composer-lock.json",
+            ".gitignore",
+            ".gitattributes"
+        ]
+    },
     "scripts": {
         "phpcs": [
             "phpcs --standard=phpcs.xml --extensions=php --ignore=vendor/,tests/"
