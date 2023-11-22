@@ -105,7 +105,9 @@ abstract class AbstractWidget implements WidgetInterface {
 			return;
 		}
 
-		$use_custom_placement = $this->get_setting( 'custom_placement_enabled' ) === 'yes';
+		// Get the placement from the settings.
+		$placement            = $this->get_setting( 'placement', $this->get_default_option() );
+		$use_custom_placement = 'custom' === $placement;
 
 		// If we have a fixed hook or priority, use that instead of the settings.
 		$hook     = $this->hook;
@@ -167,6 +169,10 @@ abstract class AbstractWidget implements WidgetInterface {
 	 * @return array
 	 */
 	public function get_setting_fields( $title ) {
+		$placement_options = $this->get_placement_options();
+		// Add a standard option for the placement that is "custom" to enabled the custom placements.
+		$placement_options['custom'] = __( 'Custom Placement', 'krokedil-shop-widgets' );
+
 		$settings = array(
 			$this->setting_prefix . 'section'   => array(
 				'type'  => 'title',
@@ -178,15 +184,11 @@ abstract class AbstractWidget implements WidgetInterface {
 				'default' => 'no',
 			),
 			$this->setting_prefix . 'placement' => array(
-				'type'    => 'select',
-				'title'   => __( 'Placement', 'krokedil-shop-widgets' ),
-				'default' => $this->get_default_option(),
-				'options' => $this->get_placement_options(),
-			),
-			$this->setting_prefix . 'custom_placement_enabled' => array(
-				'title'   => __( 'Enable custom placement hook', 'krokedil-shop-widgets' ),
-				'type'    => 'checkbox',
-				'default' => 'no',
+				'type'     => 'select',
+				'desc_tip' => __( 'Select where you want to place the widget.', 'krokedil-shop-widgets' ),
+				'title'    => __( 'Placement', 'krokedil-shop-widgets' ),
+				'default'  => $this->get_default_option(),
+				'options'  => $placement_options,
 			),
 			$this->setting_prefix . 'custom_placement_hook' => array(
 				'title'    => __( 'Custom placement hook', 'krokedil-shop-widgets' ),
