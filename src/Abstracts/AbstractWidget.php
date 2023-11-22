@@ -1,6 +1,7 @@
 <?php
 namespace Krokedil\ShopWidgets\Abstracts;
 
+use Krokedil\ShopWidgets\Assets;
 use Krokedil\ShopWidgets\Interfaces\WidgetInterface;
 use Krokedil\ShopWidgets\Traits\FixedHook;
 use Krokedil\ShopWidgets\Traits\HasScripts;
@@ -25,6 +26,13 @@ abstract class AbstractWidget implements WidgetInterface {
 	protected $output;
 
 	/**
+	 * The plugin slug for the plugin that is adding the widget.
+	 *
+	 * @var string
+	 */
+	protected $plugin_slug;
+
+	/**
 	 * Plugin settings.
 	 *
 	 * @var array
@@ -39,6 +47,13 @@ abstract class AbstractWidget implements WidgetInterface {
 	protected $setting_prefix = '';
 
 	/**
+	 * Assets class instance.
+	 *
+	 * @var Assets
+	 */
+	protected $assets;
+
+	/**
 	 * Class constructor.
 	 *
 	 * @param string $plugin_slug The slug for the plugin that is adding the widget.
@@ -47,8 +62,10 @@ abstract class AbstractWidget implements WidgetInterface {
 	 * @return void
 	 */
 	public function __construct( $plugin_slug, $plugin_settings = array() ) {
-		$this->set_plugin_settings( $plugin_settings );
+		$this->assets         = new Assets();
+		$this->plugin_slug    = $plugin_slug;
 		$this->setting_prefix = $plugin_slug . '_' . $this->get_slug() . '_';
+		$this->set_plugin_settings( $plugin_settings );
 
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_assets' ) );
 	}
@@ -173,6 +190,12 @@ abstract class AbstractWidget implements WidgetInterface {
 		// Add a standard option for the placement that is "custom" to enabled the custom placements.
 		$placement_options['custom'] = __( 'Custom Placement', 'krokedil-shop-widgets' );
 
+		// Get the current placement value if it is set.
+		$placement = $this->get_setting( 'placement', $this->get_default_option() );
+
+		// If custom placement is enabled.
+		$using_custom_placement = 'custom' === $placement;
+
 		$settings = array(
 			$this->setting_prefix . 'section'   => array(
 				'type'  => 'title',
@@ -184,25 +207,40 @@ abstract class AbstractWidget implements WidgetInterface {
 				'default' => 'no',
 			),
 			$this->setting_prefix . 'placement' => array(
-				'type'     => 'select',
-				'desc_tip' => __( 'Select where you want to place the widget.', 'krokedil-shop-widgets' ),
-				'title'    => __( 'Placement', 'krokedil-shop-widgets' ),
-				'default'  => $this->get_default_option(),
-				'options'  => $placement_options,
+				'type'              => 'select',
+				'desc_tip'          => __( 'Select where you want to place the widget.', 'krokedil-shop-widgets' ),
+				'title'             => __( 'Placement', 'krokedil-shop-widgets' ),
+				'default'           => $this->get_default_option(),
+				'options'           => $placement_options,
+				'custom_attributes' => array(
+					'data-krokedil-placement'   => true,
+					'data-krokedil-setting-key' => $this->setting_prefix,
+				),
 			),
 			$this->setting_prefix . 'custom_placement_hook' => array(
-				'title'    => __( 'Custom placement hook', 'krokedil-shop-widgets' ),
-				'desc_tip' => __( 'Enter your own action that you want to use for the placement of the widget.', 'krokedil-shop-widgets' ),
-				'type'     => 'text',
-				'default'  => '',
+				'title'             => __( 'Custom placement hook', 'krokedil-shop-widgets' ),
+				'desc_tip'          => __( 'Enter your own action that you want to use for the placement of the widget.', 'krokedil-shop-widgets' ),
+				'type'              => 'text',
+				'default'           => '',
+				'class'             => 'krokedil-shop-widget-custom-placement' . ( $using_custom_placement ? '' : ' krokedil-shop-widget-hidden' ), // Add a class for the custom placement fields to hide them if custom placement is not enabled.
+				'custom_attributes' => array(
+					'data-krokedil-setting-key' => $this->setting_prefix,
+				),
 			),
 			$this->setting_prefix . 'custom_placement_priority' => array(
-				'title'    => __( 'Custom placement hook priority', 'krokedil-shop-widgets' ),
-				'desc_tip' => __( 'Enter the priority for the custom hook that you want to use.', 'krokedil-shop-widgets' ),
-				'type'     => 'number',
-				'default'  => '',
+				'title'             => __( 'Custom placement hook priority', 'krokedil-shop-widgets' ),
+				'desc_tip'          => __( 'Enter the priority for the custom hook that you want to use.', 'krokedil-shop-widgets' ),
+				'type'              => 'number',
+				'default'           => '',
+				'class'             => 'krokedil-shop-widget-custom-placement' . ( $using_custom_placement ? '' : ' krokedil-shop-widget-hidden' ), // Add a class for the custom placement fields to hide them if custom placement is not enabled.
+				'custom_attributes' => array(
+					'data-krokedil-setting-key' => $this->setting_prefix,
+				),
 			),
 		);
+
+		// Register the plugin slug as a allowed section for the assets to be added to.
+		$this->assets->add_allowed_section( $this->plugin_slug );
 
 		return $settings;
 	}
